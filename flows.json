@@ -1,0 +1,307 @@
+[
+    {
+        "id": "bd8fb6ff15054fba",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8ba6c8af5844cc1a",
+        "type": "mysql",
+        "z": "bd8fb6ff15054fba",
+        "mydb": "c882ffdbb6de7184",
+        "name": "",
+        "x": 680,
+        "y": 400,
+        "wires": [
+            [
+                "f49007c24e3bfd19"
+            ]
+        ]
+    },
+    {
+        "id": "f49007c24e3bfd19",
+        "type": "debug",
+        "z": "bd8fb6ff15054fba",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "9022dfa9e58eb368",
+        "type": "inject",
+        "z": "bd8fb6ff15054fba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "20",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "0",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 290,
+        "y": 440,
+        "wires": [
+            [
+                "a51d149e169a7248"
+            ]
+        ]
+    },
+    {
+        "id": "19104375dfb71cbb",
+        "type": "tcp in",
+        "z": "bd8fb6ff15054fba",
+        "name": "",
+        "server": "server",
+        "host": "",
+        "port": "8888",
+        "datamode": "stream",
+        "datatype": "buffer",
+        "newline": "",
+        "topic": "",
+        "trim": false,
+        "base64": false,
+        "tls": "",
+        "x": 260,
+        "y": 340,
+        "wires": [
+            [
+                "4749bfc9b6915b82"
+            ]
+        ]
+    },
+    {
+        "id": "4749bfc9b6915b82",
+        "type": "function",
+        "z": "bd8fb6ff15054fba",
+        "name": "function 1",
+        "func": "if (global.get(\"cond\") >=1) {\nmsg.topic = \"INSERT INTO alarms (alarm_status,alarm_message,id_device) VALUES ('active','Wykryto ruch',\"+msg.payload+\");\"\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 340,
+        "wires": [
+            [
+                "8ba6c8af5844cc1a"
+            ]
+        ]
+    },
+    {
+        "id": "a51d149e169a7248",
+        "type": "function",
+        "z": "bd8fb6ff15054fba",
+        "name": "function 3",
+        "func": "msg.topic = \"UPDATE devices SET device_attributes = 1 WHERE id_device = 1 or id_device = 2 or id_device = 3;\"\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 440,
+        "wires": [
+            [
+                "8ba6c8af5844cc1a"
+            ]
+        ]
+    },
+    {
+        "id": "9a621ba032a86ab6",
+        "type": "switch",
+        "z": "bd8fb6ff15054fba",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "gte",
+                "v": "1",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1630,
+        "y": 240,
+        "wires": [
+            [
+                "f80a8533071909ad"
+            ],
+            [
+                "ab8d70c4cd595583"
+            ]
+        ]
+    },
+    {
+        "id": "769671b1db2472fb",
+        "type": "mysql",
+        "z": "bd8fb6ff15054fba",
+        "mydb": "c882ffdbb6de7184",
+        "name": "",
+        "x": 580,
+        "y": 220,
+        "wires": [
+            [
+                "6b7bcd11db179cae"
+            ]
+        ]
+    },
+    {
+        "id": "c1e8d9fa538c089c",
+        "type": "function",
+        "z": "bd8fb6ff15054fba",
+        "name": "function 4",
+        "func": "msg.topic = \"SELECT active FROM devices WHERE id_device = 1 OR id_device = 2 OR id_device = 3 ;\"\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 220,
+        "wires": [
+            [
+                "769671b1db2472fb"
+            ]
+        ]
+    },
+    {
+        "id": "6d434039eb1cc58d",
+        "type": "inject",
+        "z": "bd8fb6ff15054fba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 270,
+        "y": 220,
+        "wires": [
+            [
+                "c1e8d9fa538c089c"
+            ]
+        ]
+    },
+    {
+        "id": "6b7bcd11db179cae",
+        "type": "function",
+        "z": "bd8fb6ff15054fba",
+        "name": "function 5",
+        "func": "global.set(\"cond\", msg.payload[0][\"active\"] + msg.payload[1][\"active\"] + msg.payload[2][\"active\"]);\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 220,
+        "wires": [
+            [
+                "adb5f37f96877206"
+            ]
+        ]
+    },
+    {
+        "id": "f80a8533071909ad",
+        "type": "debug",
+        "z": "bd8fb6ff15054fba",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1780,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "ab8d70c4cd595583",
+        "type": "debug",
+        "z": "bd8fb6ff15054fba",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1780,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "adb5f37f96877206",
+        "type": "debug",
+        "z": "bd8fb6ff15054fba",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "cond",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "c882ffdbb6de7184",
+        "type": "MySQLdatabase",
+        "name": "iot2023_device",
+        "host": "20.107.176.118",
+        "port": "3306",
+        "db": "iot_project",
+        "tz": "",
+        "charset": "UTF8"
+    }
+]
